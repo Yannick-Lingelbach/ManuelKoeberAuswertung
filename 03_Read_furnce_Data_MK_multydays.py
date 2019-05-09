@@ -15,29 +15,43 @@ import matplotlib
 import os
 
 
-actual_path='C:/Users/LYI9Fe/Documents/10_PythonProject/30_Koeber_Manuel'
 # Import data to be analysed
+Manuel = True
 
-listdir = pd.Series(os.listdir(actual_path+'/Data'))
+if Manuel:
+    actual_path='U:/Bachelorarbeit/Messdaten'
+    folder_name = '/19_05_07'
+else:
+    actual_path='C:/Users/LYI9Fe/Documents/10_PythonProject/30_Koeber_Manuel'
+    folder_name = '/Data'
+
+
+
+##############################################################
+
+listdir = pd.Series(os.listdir(actual_path+folder_name))
 
 # -> Select from List of Files read in:
-file_number=list(range(8)) 
+file_number=list(range(12,32)) 
 #file_number=[0,3,4]
-file_number=[20,21,22,23,24,25,26,27,28,29,30,31,32]
+#file_number=[16,17]
+#file_number=list(range(3,39))
 
 list_df_fur=[]
 
 # Read in Data from furnace
+dateparse = lambda x: pd.datetime.strptime(x, '%d.%m.%Y %H:%M:%S')
+
 for i in file_number:
-    df_my_import   = pd.read_csv(actual_path+'/Data/'+listdir[i],
-                           sep="\t",skipfooter=1,decimal='.',encoding = 'unicode_escape', parse_dates=['Systemzeitdiagramm'],engine='python')
+    df_my_import   = pd.read_csv(actual_path+folder_name+'/'+listdir[i],
+                           sep="\t",skipfooter=1,decimal='.',encoding = 'unicode_escape', parse_dates=['Systemzeitdiagramm'], date_parser=dateparse,engine='python')
     list_df_fur.append(df_my_import)
 
 df_all_days = pd.concat(list_df_fur)
+
 ######## Data Cleaning ######## 
-    
-# Set all timestamps to same start point then Find start of 'Solltemoeratur'>0 
-# and align all curves to that startpoint by shifting them  
+
+df_all_days['Systemzeitdiagramm']= pd.to_datetime(df_all_days['Systemzeitdiagramm'],format='%Y-%m-%d %H:%M:%S', errors='ignore')
   
 print('-> List of Files read in: \n\n' 
       + str(listdir) 
@@ -74,12 +88,6 @@ if True:
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
     plt.show()
         
-# =============================================================================
-#     for count,df in enumerate(list_df_fur):
-#         for i in lst_curves:
-#             temp.plot(pd.to_datetime(df['Systemzeitdiagramm']).dt.time, df.iloc[:,i],marker[count], label=str(count)+'_'+df.columns[i],linewidth=1.0)
-#         
-# =============================================================================
     ax1.set(xlabel='time', ylabel='% Percentage',
               title='Percentage of Gas in furnace')
     ax1.legend(loc=2)
