@@ -16,7 +16,7 @@ import os
 
 
 # Import data to be analysed
-Manuel = True
+Manuel = False
 
 if Manuel:
     actual_path='U:/Bachelorarbeit/Messdaten'
@@ -30,10 +30,8 @@ else:
 listdir = pd.Series(os.listdir(actual_path+folder_name))
 
 # -> Select from List of Files read in:
-file_number=list(range(12,32)) 
+file_number=list(range(12,13)) 
 #file_number=[0,3,4]
-#file_number=[16,17]
-#file_number=list(range(3,39))
 
 list_df_fur=[]
 
@@ -95,63 +93,12 @@ if True:
     ax2.legend(loc=1)
     ax2.tick_params(axis='y', labelcolor='r')
     ax1.grid()
-
-
-######## Figure 2:  Plotting the Pressure ##########
-
-# -> Select which Curves to plot
-lst_pres_curves=[6]
-marker_press = {0:'-',1:'-',2:'-',3:'-',4:'-',5:'-',6:'-', 7:'-', 8:'-',9:'-',10:'-',11:'-',12:'-',13:'-', 14:'-'}
-
-if False:
-    fig, pres = plt.subplots()
-    for count,df in enumerate(list_df_fur):
-        for curve in lst_pres_curves:
-            pres.plot(pd.to_datetime(df['Zeit']).dt.time, df.iloc[:,curve],marker_press[curve],c=color[count], label=str(count)+'_'+df.columns[curve],linewidth=1.0)
+    ax1.tick_params(axis="x", rotation=50,labelsize=8 )
     
-    pres.set(xlabel='time', ylabel='pressure (mbar)',
-              title='Pressure of Gas in furnace')
-    pres.set_yscale("log", nonposy='clip')
-    pres.legend()
-    pres.grid()
+    myFmt = mdates.DateFormatter('%d %b %H:%M')
+    ax1.xaxis.set_major_formatter(myFmt)
 
 
-######## Figure 3:  Plotting Temperature and Pressure ##########
-
-if False:
-    fig, temp2 = plt.subplots()
-    lines = []
-    
-    File_numb = file_number.index(3)
-    df = list_df_fur[File_numb]
-    
-    lst_temp_curves2 = [2]
-    lst_pres_curves2 = [3]
-    
-    col_temp=['darkred','red','lightred']
-    col_pres=['darkblue','blue','lightblue']
-    
-    for i,curve in enumerate(lst_temp_curves2):
-        lines += temp2.plot(pd.to_datetime(df['Zeit']).dt.time, df.iloc[:,curve],marker[curve],c=col_temp[i], label=str(File_numb)+'_'+df.columns[curve],linewidth=1.0)
-        
-    temp2.set(xlabel='time',title='Temperature and Pressure in furnace')
-    temp2.set_ylabel('temperature (°C)', color=col_temp[0])
-    
-    pres2 = temp2.twinx()
-
-    for j,curve in enumerate(lst_pres_curves2):
-        lines += pres2.plot(pd.to_datetime(df['Zeit']).dt.time, df.iloc[:,curve],marker_press[curve],c=col_pres[j], label=str(File_numb)+'_'+df.columns[curve],linewidth=1.0)
-    
-    pres2.set_ylabel('pressure (mbar)', color=col_pres[0])  # we already handled the x-label with ax1
-    #pres2.set_yscale("log", nonposy='clip')
-    
-    temp2.legend(lines, [l.get_label() for l in lines])
-
-    
-
-#tem_pre.set_yscale("log", nonposy='clip')
-#
-#tem_pre.grid()  
 
 
 
