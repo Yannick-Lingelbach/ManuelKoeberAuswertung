@@ -25,8 +25,6 @@ else:
     actual_path='C:/Users/LYI9Fe/Documents/10_PythonProject/30_Koeber_Manuel'
     folder_name = '/Data'
 
-
-
 ##############################################################
 
 listdir = pd.Series(os.listdir(actual_path+folder_name))
