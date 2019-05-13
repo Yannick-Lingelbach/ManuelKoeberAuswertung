@@ -57,9 +57,13 @@ for i,val in enumerate(df_my_import.dtypes.iteritems()):
 
 df_all_days.set_index('Systemzeitdiagramm',inplace=True)
 
+print('\n\nStart conversion to Excel ...')
+
 writer = ExcelWriter(actual_path+folder_out+export_name)
 df_all_days.to_excel(writer,'Sheet1')
 writer.save()
+
+print('Excel Output finished')
 
 
 
